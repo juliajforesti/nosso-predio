@@ -10,7 +10,7 @@ const serviceSchema = new Schema(
     category: {type: String, enum: ['Produto', 'Serviço']},
     price: Number,
     date: String,
-    requests: [],
+    requests: { type: Schema.Types.ObjectId, ref: 'Order'},
     image: String,
     apartment: String,
     owner: { type: Schema.Types.ObjectId, ref: 'User'},
