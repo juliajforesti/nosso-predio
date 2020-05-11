@@ -8,6 +8,12 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const passport = require("passport");
+
+require("./configs/passport");
+
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -34,6 +40,26 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ADD SESSION SETTINGS HERE:
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 24 * 60 * 60, // 1 day
+    }),
+  })
+);
+
+// USE passport.initialize() and passport.session() HERE:
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // ADD CORS SETTINGS HERE TO ALLOW CROSS-ORIGIN INTERACTION:
 
 app.use(
@@ -45,7 +71,9 @@ app.use(
 
 // api routes
 app.use("/api", require("./routes/building"));
-app.use("/api", require("./routes/serice"));
+// app.use("/api", require("./routes/service"));
 app.use("/api", require("./routes/auth"));
+app.use("/api", require("./routes/user"));
+
 
 module.exports = app;

@@ -6,7 +6,10 @@ const Schema = mongoose.Schema;
 const buildingSchema = new Schema(
   {
     name: String,
-    address: String,
+    address: {
+      cep: Number,
+      number: Number,
+    },
     image: String,
     residents:[{ type: Schema.Types.ObjectId, ref: 'User'}],
     services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
