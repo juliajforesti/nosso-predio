@@ -1,0 +1,4 @@
+# Environment Variables should NEVER be published
+.env.development
+.env.production
+.env
