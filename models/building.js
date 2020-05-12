@@ -7,7 +7,7 @@ const buildingSchema = new Schema(
   {
     name: String,
     address: {
-      cep: Number,
+      cep: String,
       number: Number,
     },
     image: String,

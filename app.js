@@ -71,9 +71,10 @@ app.use(
 
 // api routes
 app.use("/api", require("./routes/building"));
-// app.use("/api", require("./routes/service"));
+app.use("/api", require("./routes/service"));
 app.use("/api", require("./routes/auth"));
 app.use("/api", require("./routes/user"));
+app.use("/api", require("./routes/order"));
 
 
 module.exports = app;

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Building = require("../models/building");
+const User = require("../models/user");
 const mongoose = require("mongoose");
 
 // GET BUILDING
@@ -47,12 +48,22 @@ router.post("/add-building", (req, res, next) => {
       cep,
       number,
     },
+    residents: [req.user._id],
     image:
       "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
     owner: req.user._id,
   })
-    .then((response) => {
-      res.json(response);
+    .then((building) => {
+      User.findByIdAndUpdate(
+        req.user._id,
+        { $push: { buildings: building } },
+        { new: true }
+      )
+        .then((response) => res.json(response))
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+      res.json(building);
     })
     .catch((err) => {
       res.status(500).json(err);
@@ -99,4 +110,3 @@ router.delete("/delete-building/:id", (req, res, next) => {
 });
 
 module.exports = router;
-
