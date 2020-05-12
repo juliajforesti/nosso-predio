@@ -40,6 +40,14 @@ router.post("/add-building", (req, res, next) => {
     return;
   }
 
+  const characters =
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let token = "";
+  for (let i = 0; i < 25; i++) {
+    token += characters[Math.floor(Math.random() * characters.length)];
+  }
+  const confirmationCode = token;
+
   const { name, cep, number } = req.body;
 
   Building.create({
@@ -48,6 +56,7 @@ router.post("/add-building", (req, res, next) => {
       cep,
       number,
     },
+    confirmationCode,
     residents: [req.user._id],
     image:
       "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
@@ -103,6 +112,32 @@ router.delete("/delete-building/:id", (req, res, next) => {
       res.json({
         message: `Building with ${req.params.id} is removed successfully.`,
       });
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+});
+
+// Confirmation code
+router.get("/building-invitation/:confirmCode", (req, res, next) => {
+  const { confirmCode } = req.params;
+
+  Building.findOneAndUpdate(
+    { confirmationCode: confirmCode },
+    { $push: { residents: req.user._id } },
+    { new: true }
+  )
+    .then((building) => {
+      User.findByIdAndUpdate(
+        req.user._id,
+        { $push: { buildings: building } },
+        { new: true }
+      )
+        .then((response) => res.json(response))
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+      res.json(building);
     })
     .catch((err) => {
       res.status(500).json(err);

@@ -10,10 +10,11 @@ const buildingSchema = new Schema(
       cep: String,
       number: Number,
     },
+    confirmationCode: String,
     image: String,
-    residents:[{ type: Schema.Types.ObjectId, ref: 'User'}],
+    residents: [{ type: Schema.Types.ObjectId, ref: "User" }],
     services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
-    owner: { type: Schema.Types.ObjectId, ref: 'User'},
+    owner: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
