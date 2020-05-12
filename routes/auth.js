@@ -18,7 +18,7 @@ authRoutes.post("/signup", (req, res, next) => {
   if (password.length < 6) {
     res.status(400).json({
       message:
-        "Please make your password at least 4 characters long for security purposes.",
+        "Please make your password at least 6 characters long for security purposes.",
     });
     return;
   }
@@ -38,25 +38,25 @@ authRoutes.post("/signup", (req, res, next) => {
 
     const salt = bcrypt.genSaltSync(10);
     const hashPass = bcrypt.hashSync(password, salt);
-
-    User.create({
+    const newUser = new User({
       name,
       email,
       password: hashPass,
       image:
         "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
-    }).then((response) => {
-      // Automatically log in user after sign up
-      req
-        .login(response, (err) => {
+    });
+    newUser
+      .save()
+      .then((response) => {
+        req.login(response, (err) => {
           if (err) {
             res.status(500).json({ message: "Login after signup went bad." });
             return;
           }
           res.json(response);
-        })
-    })
-    .catch((err) => res.status(400).json({ message: 'problem'}))
+        });
+      })
+      .catch((err) => res.status(400).json({ message: "problem" }));
   });
 });
 
@@ -83,6 +83,7 @@ authRoutes.post("/login", (req, res, next) => {
         res.status(500).json({ message: "Session save went bad." });
         return;
       }
+      console.log(req.user);
       res.status(200).json(theUser);
     });
   })(req, res, next);
@@ -100,6 +101,5 @@ authRoutes.get("/loggedin", (req, res, next) => {
   }
   res.status(403).json({ message: "Unauthorized" });
 });
-
 
 module.exports = authRoutes;

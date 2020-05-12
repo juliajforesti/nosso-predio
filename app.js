@@ -12,7 +12,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 
-require("./configs/passport");
+
 
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -27,7 +27,6 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to mongo", err);
   });
-
 
 
 const app = express();
@@ -47,13 +46,15 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 600000 },
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
       ttl: 24 * 60 * 60, // 1 day
     }),
   })
 );
+
+require("./configs/passport");
 
 // USE passport.initialize() and passport.session() HERE:
 
