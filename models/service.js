@@ -7,16 +7,15 @@ const serviceSchema = new Schema(
   {
     name: String,
     description: String,
-    category: {type: String, enum: ['Produto', 'Serviço']},
+    category: { type: String, enum: ["Produto", "Serviço"] },
     price: Number,
     date: String,
-    requests: { type: Schema.Types.ObjectId, ref: 'Order'},
+    orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
     image: String,
     apartment: String,
-    owner: { type: Schema.Types.ObjectId, ref: 'User'},
-    
-    // building: [{ type: Schema.Types.ObjectId, ref: "Building" }],
+    owner: { type: Schema.Types.ObjectId, ref: "User" },
 
+    // building: [{ type: Schema.Types.ObjectId, ref: "Building" }],
   },
   { timestamps: true }
 );

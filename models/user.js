@@ -8,9 +8,9 @@ const userSchema = new Schema(
     name: String,
     email: String,
     password: String,
-    building: [{ type: Schema.Types.ObjectId, ref: "Building" }],
+    buildings: [{ type: Schema.Types.ObjectId, ref: "Building" }],
     image: String,
-    requests: [],
+    orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
     services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
   },
   { timestamps: true }
