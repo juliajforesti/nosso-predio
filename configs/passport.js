@@ -22,25 +22,24 @@ passport.use(
   new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password'
-  }, (email, password, next) => {
-    console.log(email, pessword)
-    User.findOne({ email: email }, (err, user) => {
+  }, (username, password, next) => {
+    User.findOne({ email: username }, (err, foundUser) => {
       if (err) {
         next(err);
         return;
       }
 
-      if (!user) {
+      if (!foundUser) {
         next(null, false, { message: "Incorrect email." });
         return;
       }
 
-      if (!bcrypt.compareSync(password, user.password)) {
+      if (!bcrypt.compareSync(password, foundUser.password)) {
         next(null, false, { message: "Incorrect password." });
         return;
       }
 
-      next(null, user);
+      next(null, foundUser);
     });
   })
 );
