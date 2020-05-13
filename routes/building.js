@@ -34,7 +34,6 @@ router.get("/building/:id", (req, res, next) => {
 
 // POST route => to create a new building
 router.post("/add-building", (req, res, next) => {
-  // checks if body was provided
   if (Object.keys(req.body).length === 0) {
     res.status(400).json({ message: "no body provided" });
     return;
@@ -47,8 +46,8 @@ router.post("/add-building", (req, res, next) => {
     token += characters[Math.floor(Math.random() * characters.length)];
   }
   const confirmationCode = token;
-
   const { name, cep, number } = req.body;
+  console.log('USER EH ----------->', req.user)
 
   Building.create({
     name,
