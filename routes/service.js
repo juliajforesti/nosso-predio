@@ -2,7 +2,18 @@ const express = require("express");
 const router = express.Router();
 const Building = require("../models/building");
 const Service = require("../models/service");
+const User = require("../models/user");
 
+//GET ALL SERVICES
+router.get("/services", (req, res) => {
+  Service.find()
+    .then((service) => {
+      res.status(200).json(service);
+    })
+    .catch((err) => res.status(500).json(err));
+});
+
+//GET SPECIFIC SERVICE
 router.get("/building/:buildingId/service/:serviceId", (req, res) => {
   const serviceId = req.params.serviceId;
 
@@ -37,6 +48,7 @@ router.post("/building/:buildingId/add-service", (req, res) => {
     apartment,
     date,
     owner: req.user._id,
+    building: buildingId
   })
     .then((service) => {
       Building.findByIdAndUpdate(
@@ -44,7 +56,15 @@ router.post("/building/:buildingId/add-service", (req, res) => {
         { $push: { services: service } },
         { new: true }
       )
-        .then((response) => res.status(200).json(response))
+        .then((response) => {
+          User.findByIdAndUpdate(
+            req.user._id,
+            { $push: { services: service } },
+            { new: true }
+          )
+            .then((resp) => res.status(200).json(resp))
+            .catch((err) => res.status(500).json(err));
+        })
         .catch((err) => res.status(500).json(err));
     })
     .catch((err) => res.status(500).json(err));

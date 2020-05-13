@@ -14,8 +14,7 @@ const serviceSchema = new Schema(
     image: String,
     apartment: String,
     owner: { type: Schema.Types.ObjectId, ref: "User" },
-
-    // building: [{ type: Schema.Types.ObjectId, ref: "Building" }],
+    building: { type: Schema.Types.ObjectId, ref: "Building" },
   },
   { timestamps: true }
 );

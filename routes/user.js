@@ -12,7 +12,8 @@ router.get("/user/:id", (req, res, next) => {
   }
 
   User.findById(req.params.id)
-    .populate("building", "services")
+    .populate("building")
+    .populate("services")
     .then((response) => {
       res.status(200).json(response);
     })
