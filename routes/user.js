@@ -29,18 +29,41 @@ router.post("/edit-user/:id", (req, res, next) => {
     return;
   }
 
-  const { email, name, password } = req.body;
+  const { email, name } = req.body;
+
+
+  User.findByIdAndUpdate(
+    req.params.id,
+    { $set: { email, name } },
+    { new: true }
+  )
+    .then((response) => {
+      res.json(response);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+});
+
+// EDIT PASSWORD
+router.post("/edit-password/:id", (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  const { password } = req.body;
   const salt = bcrypt.genSaltSync(10);
   const hashPass = bcrypt.hashSync(password, salt);
 
   User.findByIdAndUpdate(
     req.params.id,
-    { $set: { email, name, password: hashPass } },
+    { $set: { password: hashPass } },
     { new: true }
   )
     .then(() => {
       res.json({
-        message: `User with ${req.params.id} is updated successfully.`,
+        message: `Password of User: ${req.params.id} is updated successfully.`,
       });
     })
     .catch((err) => {
