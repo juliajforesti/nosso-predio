@@ -37,6 +37,15 @@ router.post(
   }
 );
 
+//GET ALL ORDERS
+router.get("/orders", (req, res) => {
+  Order.find()
+    .then((orders) => {
+      res.status(200).json(orders);
+    })
+    .catch((err) => res.status(500).json(err));
+});
+
 router.post(
   "/building/:buildingId/service/:serviceId/status-order/:orderId",
   (req, res) => {
