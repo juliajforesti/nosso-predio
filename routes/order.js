@@ -42,6 +42,7 @@ router.get("/orders", (req, res) => {
   Order.find()
     .sort({updatedAt: -1})
     .populate("service")
+    .populate("origin")
     .then((orders) => {
       res.status(200).json(orders);
     })
