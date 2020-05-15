@@ -37,11 +37,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use((req, res, next)=> {
-  res.sendFile(__dirname + '/public/index.html')
-})
 
-app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use(express.static(path.join(__dirname, 'public')));
 
 
 // ADD SESSION SETTINGS HERE:
@@ -82,5 +80,8 @@ app.use("/api", require("./routes/auth"));
 app.use("/api", require("./routes/user"));
 app.use("/api", require("./routes/order"));
 
+app.use((req, res, next)=> {
+  res.sendFile(__dirname + '/public/index.html')
+})
 
 module.exports = app;
