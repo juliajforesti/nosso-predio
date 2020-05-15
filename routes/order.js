@@ -40,6 +40,8 @@ router.post(
 //GET ALL ORDERS
 router.get("/orders", (req, res) => {
   Order.find()
+    .sort({updatedAt: -1})
+    .populate("service")
     .then((orders) => {
       res.status(200).json(orders);
     })

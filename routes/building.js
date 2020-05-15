@@ -47,7 +47,7 @@ router.post("/add-building", (req, res, next) => {
   }
   const confirmationCode = token;
   const { name, cep, number } = req.body;
-  console.log('USER EH ----------->', req.user)
+  console.log("USER EH ----------->", req.user);
 
   Building.create({
     name,
@@ -88,11 +88,13 @@ router.post("/edit-building/:id", (req, res, next) => {
   const { name, cep, number } = req.body;
   const address = { cep, number };
 
-  Building.findByIdAndUpdate(buildingId, { $set: { name, address } })
-    .then(() => {
-      res.json({
-        message: `Building with ${req.params.id} is updated successfully.`,
-      });
+  Building.findByIdAndUpdate(
+    buildingId,
+    { $set: { name, address } },
+    { new: true }
+  )
+    .then((response) => {
+      res.json(response);
     })
     .catch((err) => {
       res.status(500).json(err);
@@ -121,26 +123,32 @@ router.delete("/delete-building/:id", (req, res, next) => {
 router.get("/building-invitation/:confirmCode", (req, res, next) => {
   const { confirmCode } = req.params;
 
-  Building.findOneAndUpdate(
-    { confirmationCode: confirmCode },
-    { $push: { residents: req.user._id } },
-    { new: true }
-  )
-    .then((building) => {
-      User.findByIdAndUpdate(
-        req.user._id,
-        { $push: { buildings: building } },
-        { new: true }
-      )
-        .then((response) => res.json(response))
-        .catch((err) => {
-          res.status(500).json(err);
+  Building.findOne({ confirmationCode: confirmCode })
+    .then((theBuilding) => {
+      if (theBuilding.residents.includes(req.user._id)) {
+        res.status(200).json(theBuilding);
+      } else {
+        Building.findOneAndUpdate(
+          { confirmationCode: confirmCode },
+          { $push: { residents: req.user._id } },
+          { new: true }
+        ).then((building) => {
+          User.findByIdAndUpdate(
+            req.user._id,
+            { $push: { buildings: building } },
+            { new: true }
+          )
+            .then((response) => res.json(response))
+            .catch((err) => {
+              res.status(500).json(err);
+            });
+          res.json(building);
         });
-      res.json(building);
+      }
     })
     .catch((err) => {
       res.status(500).json(err);
-    });
+    })
 });
 
 module.exports = router;
