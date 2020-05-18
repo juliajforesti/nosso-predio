@@ -4,6 +4,7 @@ const authRoutes = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
+
 // require the user model !!!!
 const User = require("../models/user");
 
@@ -88,11 +89,25 @@ authRoutes.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+//LOGIN GOOGLE
+
+authRoutes.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile'] }));
+
+authRoutes.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+
+  //LOGOUT
+
 authRoutes.get("/logout", (req, res, next) => {
   req.logout();
   res.status(200).json({ message: "Log out success!" });
 });
 
+//LOGGEDIN
 authRoutes.get("/loggedin", (req, res, next) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
