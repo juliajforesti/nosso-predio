@@ -3,6 +3,7 @@ const router = express.Router();
 const Building = require("../models/building");
 const User = require("../models/user");
 const mongoose = require("mongoose");
+const uploader = require("../configs/cloudinary");
 
 // GET BUILDING
 router.get(`/buildings`, (req, res, next) => {
@@ -101,6 +102,24 @@ router.post("/edit-building/:id", (req, res, next) => {
     });
 });
 
+router.post(
+  "/edit-building-photo/:id",
+  uploader.single("image"),
+  (req, res, next) => {
+    const buildingId = req.params.id;
+
+    const image = req.file.secure_url;
+
+    Building.findByIdAndUpdate(buildingId, { $set: { image } }, { new: true })
+      .then((response) => {
+        res.json(response);
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  }
+);
+
 // DELETE route => to delete a specific building
 router.delete("/delete-building/:id", (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -148,7 +167,7 @@ router.get("/building-invitation/:confirmCode", (req, res, next) => {
     })
     .catch((err) => {
       res.status(500).json(err);
-    })
+    });
 });
 
 module.exports = router;
