@@ -58,6 +58,7 @@ app.use(
 );
 
 require("./configs/passport");
+require('./configs/google')
 
 // USE passport.initialize() and passport.session() HERE:
 

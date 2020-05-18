@@ -3,6 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs"); // !!!
 const passport = require("passport");
 
+
 passport.serializeUser((loggedInUser, cb) => {
   cb(null, loggedInUser._id);
 });
@@ -43,3 +44,5 @@ passport.use(
     });
   })
 );
+
+
