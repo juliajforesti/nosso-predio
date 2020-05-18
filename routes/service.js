@@ -3,6 +3,7 @@ const router = express.Router();
 const Building = require("../models/building");
 const Service = require("../models/service");
 const User = require("../models/user");
+const uploader = require("../configs/cloudinary");
 
 //GET ALL SERVICES
 router.get("/services", (req, res) => {
@@ -48,7 +49,7 @@ router.post("/building/:buildingId/add-service", (req, res) => {
     apartment,
     date,
     owner: req.user._id,
-    building: buildingId
+    building: buildingId,
   })
     .then((service) => {
       Building.findByIdAndUpdate(
@@ -87,6 +88,28 @@ router.post("/building/:buildingId/edit-service/:serviceId", (req, res) => {
     })
     .catch((err) => res.status(500).json(err));
 });
+
+router.post(
+  "/building/:buildingId/edit-service-photo/:serviceId",
+  uploader.single("image"),
+  (req, res) => {
+    const serviceId = req.params.serviceId;
+
+    const image = req.file.secure_url;
+
+    Service.findByIdAndUpdate(
+      serviceId,
+      {
+        $set: { image },
+      },
+      { new: true }
+    )
+      .then((service) => {
+        res.status(200).json(service);
+      })
+      .catch((err) => res.status(500).json(err));
+  }
+);
 
 router.delete("/building/:buildingId/delete-service/:serviceId", (req, res) => {
   const serviceId = req.params.serviceId;
