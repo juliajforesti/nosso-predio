@@ -86,7 +86,7 @@ router.post("/edit-photo/:id", uploader.single("image"), (req, res, next) => {
       res.json(response);
     })
     .catch((err) => {
-      res.status(500).json(err);
+      res.status(400).json(err);
     });
 });
 
