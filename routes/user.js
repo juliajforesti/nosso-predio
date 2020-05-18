@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const uploader = require("../configs/cloudinary");
 
 /* GET user */
 router.get("/user/:id", (req, res, next) => {
@@ -30,7 +31,6 @@ router.post("/edit-user/:id", (req, res, next) => {
   }
 
   const { email, name } = req.body;
-
 
   User.findByIdAndUpdate(
     req.params.id,
@@ -65,6 +65,25 @@ router.post("/edit-password/:id", (req, res, next) => {
       res.json({
         message: `Password of User: ${req.params.id} is updated successfully.`,
       });
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
+});
+
+//UPLOAD PHOTO
+router.post("/edit-photo/:id", uploader.single("image"), (req, res, next) => {
+  console.log(req.file)
+  if (!req.file) {
+    next(new Error("No file uploaded!"));
+    return;
+  }
+
+  const image = req.file.secure_url;
+
+  User.findByIdAndUpdate(req.params.id, { $set: { image } }, { new: true })
+    .then((response) => {
+      res.json(response);
     })
     .catch((err) => {
       res.status(500).json(err);
