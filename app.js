@@ -59,6 +59,7 @@ app.use(
 
 require("./configs/passport");
 require('./configs/google')
+require('./configs/facebook')
 
 // USE passport.initialize() and passport.session() HERE:
 

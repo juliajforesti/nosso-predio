@@ -12,9 +12,7 @@ const userSchema = new Schema(
     image: String,
     orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
     services: [{ type: Schema.Types.ObjectId, ref: "Service" }],
-    googleID: {
-      type:String
-    },
+    googleID: String,
   },
   { timestamps: true }
 );
