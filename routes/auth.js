@@ -4,7 +4,6 @@ const authRoutes = express.Router();
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
-
 // require the user model !!!!
 const User = require("../models/user");
 
@@ -91,16 +90,46 @@ authRoutes.post("/login", (req, res, next) => {
 
 //LOGIN GOOGLE
 
-authRoutes.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile'] }));
+authRoutes.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ],
+  })
+);
 
-authRoutes.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+authRoutes.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "http://localhost:3000/pagina-principal",
+    failureRedirect: "http://localhost:3000/login",
+  }),
+  (req, res) => {
+    res.status(200).json({ message: "Usuario entrou" });
+  }
+);
 
-  //LOGOUT
+//FACEBOOK LOGIN
+
+authRoutes.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", { scope: ["user_friends", "manage_pages"] })
+);
+
+authRoutes.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    successRedirect: "http://localhost:3000/pagina-principal",
+    failureRedirect: "http://localhost:3000/login",
+  }),
+  (req, res) => {
+    res.status(200).json({ message: "Usuario entrou" });
+  }
+);
+
+//LOGOUT
 
 authRoutes.get("/logout", (req, res, next) => {
   req.logout();
