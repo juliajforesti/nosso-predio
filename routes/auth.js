@@ -103,8 +103,8 @@ authRoutes.get(
 authRoutes.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:3000/pagina-principal",
-    failureRedirect: "http://localhost:3000/login",
+    successRedirect: process.env.CORS_ORIGIN + "/pagina-principal",
+    failureRedirect: process.env.CORS_ORIGIN + "/login",
   }),
   (req, res) => {
     res.status(200).json({ message: "Usuario entrou" });
@@ -121,8 +121,8 @@ authRoutes.get(
 authRoutes.get(
   "/auth/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "http://localhost:3000/pagina-principal",
-    failureRedirect: "http://localhost:3000/login",
+    successRedirect: process.env.CORS_ORIGIN + "/pagina-principal",
+    failureRedirect: process.env.CORS_ORIGIN + "/login",
   }),
   (req, res) => {
     res.status(200).json({ message: "Usuario entrou" });
