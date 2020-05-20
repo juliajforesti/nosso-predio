@@ -18,7 +18,6 @@ passport.use(new FacebookStrategy({
             return;
           }
           User.create({
-            googleId: profile.id,
             name: profile.name.givenName,
             email: profile.emails[0].value,
             image: "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
