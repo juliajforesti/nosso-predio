@@ -48,6 +48,7 @@ router.post("/building/:buildingId/add-service", (req, res) => {
     category,
     apartment,
     date,
+    image: "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
     owner: req.user._id,
     building: buildingId,
   })
