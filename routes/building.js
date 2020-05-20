@@ -48,31 +48,43 @@ router.post("/add-building", (req, res, next) => {
   }
   const confirmationCode = token;
   const { name, cep, number } = req.body;
-  console.log("USER EH ----------->", req.user);
 
-  Building.create({
-    name,
-    address: {
-      cep,
-      number,
-    },
-    confirmationCode,
-    residents: [req.user._id],
-    image:
-      "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
-    owner: req.user._id,
-  })
-    .then((building) => {
-      User.findByIdAndUpdate(
-        req.user._id,
-        { $push: { buildings: building } },
-        { new: true }
-      )
-        .then((response) => res.json(response))
-        .catch((err) => {
-          res.status(500).json(err);
-        });
-      res.json(building);
+  const address = {
+    cep: cep,
+    number: number,
+  };
+
+  Building.findOne({$and: [{"address.number": number}, {"address.cep": cep}]})
+    .then((buildingExist) => {
+      if (buildingExist) {
+        res.json({ message: "Building already exists" })
+        return;
+      } else {
+        Building.create({
+          name,
+          address,
+          confirmationCode,
+          residents: [req.user._id],
+          image:
+            "https://res.cloudinary.com/juliajforesti/image/upload/v1589924447/nosso-predio/IMG_9788.jpg.jpg",
+          owner: req.user._id,
+        })
+          .then((building) => {
+            User.findByIdAndUpdate(
+              req.user._id,
+              { $push: { buildings: building } },
+              { new: true }
+            )
+              .then((response) => res.json(response))
+              .catch((err) => {
+                res.status(500).json(err);
+              });
+            res.json(building);
+          })
+          .catch((err) => {
+            res.status(500).json(err);
+          });
+      }
     })
     .catch((err) => {
       res.status(500).json(err);
