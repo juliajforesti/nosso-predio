@@ -16,6 +16,8 @@ Você pode cadastrar seu condomínio, convidar seus vizinhos para participarem d
 * Node
 * MongoDB
 
+## [Client](https://github.com/juliajforesti/nosso-predio-client)
+
 ## Autores
 
 * [**Gabriel Bohn**](https://github.com/GabrielBohn99)
