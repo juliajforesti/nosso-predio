@@ -79,7 +79,7 @@ router.post("/edit-photo/:id", uploader.single("image"), (req, res, next) => {
     return;
   }
 
-  const image = req.file.secure_url;
+  const image = req.file.secure_url.split("upload/").join('upload/c_thumb,g_faces,h_371,w_371/');
 
   User.findByIdAndUpdate(req.params.id, { $set: { image } }, { new: true })
     .then((response) => {

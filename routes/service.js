@@ -48,7 +48,7 @@ router.post("/building/:buildingId/add-service", (req, res) => {
     category,
     apartment,
     date,
-    image: "https://res.cloudinary.com/juliajforesti/image/upload/v1589218713/nosso-predio/user_cqrmt0.png",
+    image: "https://res.cloudinary.com/juliajforesti/image/upload/v1590081191/nosso-predio/images_psovxn.png",
     owner: req.user._id,
     building: buildingId,
   })
@@ -96,7 +96,7 @@ router.post(
   (req, res) => {
     const serviceId = req.params.serviceId;
 
-    const image = req.file.secure_url;
+    const image = req.file.secure_url.split("upload/").join('upload/c_thumb,g_faces,h_371,w_371/');
 
     Service.findByIdAndUpdate(
       serviceId,
