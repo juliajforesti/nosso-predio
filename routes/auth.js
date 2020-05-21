@@ -130,7 +130,6 @@ authRoutes.get(
 );
 
 //LOGOUT
-
 authRoutes.get("/logout", (req, res, next) => {
   req.logout();
   res.status(200).json({ message: "Log out success!" });
