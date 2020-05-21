@@ -73,7 +73,6 @@ router.post("/edit-password/:id", (req, res, next) => {
 
 //UPLOAD PHOTO
 router.post("/edit-photo/:id", uploader.single("image"), (req, res, next) => {
-  console.log(req.file)
   if (!req.file) {
     next(new Error("No file uploaded!"));
     return;
