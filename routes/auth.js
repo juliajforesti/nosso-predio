@@ -6,6 +6,7 @@ const bcrypt = require("bcryptjs");
 
 // require the user model !!!!
 const User = require("../models/user");
+const { array } = require("../configs/cloudinary");
 
 // POST route => SIGNUP to create a new user
 authRoutes.post("/signup", (req, res, next) => {
